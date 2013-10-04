@@ -10,6 +10,7 @@ size = width, height = 800, 600
 black = 0, 0, 0
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
+clock.tick(30)
 
 # Initialize the universe
 universe = Universe()
