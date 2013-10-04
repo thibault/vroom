@@ -21,6 +21,9 @@ class Coordinates:
         self.x = x
         self.y = y
 
+    def __repr__(self):
+        return '<Coordinates(%s, %s)>' % (self.x, self.y)
+
     def move(self, motion, time):
         """Add given motion to coordinates.
 
@@ -97,6 +100,9 @@ class Car:
         self.coordinates = coord
         self.motion = motion
         self.width = 3
+
+    def __repr__(self):
+        return '<Car (%s, %s)>' % (self.coordinates.x, self.coordinates.y)
 
     def update(self, delta):
         self.coordinates = self.coordinates.move(self.motion, delta)
