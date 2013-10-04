@@ -71,7 +71,7 @@ class Universe:
 
 
 class Nest:
-    """A nest is a car generator."""
+    """Generates new car."""
 
     birth_frequency = 5 * 500
     max_cars = 5
@@ -84,7 +84,7 @@ class Nest:
         self.motion = motion
 
         self.frequency = frequency
-        self.last_car_generated_at = datetime.datetime.now()
+        self.last_car_generated_at = datetime.datetime(1970, 1, 1)
 
     def generate_car(self, cars):
         """Add new cars on the map if necessary."""
