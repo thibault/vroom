@@ -49,11 +49,16 @@ class Coordinates:
 class Universe:
     def __init__(self):
         self.cars = list()
-        self.nests = (
-            Nest(Coordinates(100, 100),
-                 Motion(math.pi / 2, 8.0),
-                 frequency=5000),
-        )
+        self.nests = list()
+        self.holes = list()
+
+    def add_nest(self, x, y, angle, speed, frequency=5000):
+        self.nests.append(Nest(Coordinates(x, y),
+                               Motion(angle, speed),
+                               frequency))
+
+    def add_hole(self, x, y):
+        self.holes.append(Hole(Coordinates(x, y)))
 
     def update(self, delta):
         """Update the universe status."""
@@ -61,6 +66,9 @@ class Universe:
             new_cars = nest.generate_car(self.cars)
             if new_cars:
                 self.cars.append(new_cars)
+
+        for hole in self.holes:
+            self.cars = filter(hole.filter, self.cars)
 
         for car in self.cars:
             car.update(delta)
@@ -99,6 +107,18 @@ class Nest:
             self.last_car_generated_at = now
 
         return new_car
+
+
+class Hole:
+    """Special objects that deletes cars coming too close."""
+    radius = 20
+
+    def __init__(self, coord):
+        assert isinstance(coord, Coordinates)
+        self.coord = coord
+
+    def filter(self, car):
+        return car.coordinates.distance(self.coord) > self.radius
 
 
 class Car:
