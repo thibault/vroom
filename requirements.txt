@@ -1,0 +1,3 @@
+argparse==1.2.1
+pygame==1.9.1release
+wsgiref==0.1.2
