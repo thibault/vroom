@@ -31,5 +31,5 @@ class Car:
         pass
 
     def draw(self, surface):
-        rect = pygame.Rect(self.x, self.y, 10, 10)
+        rect = pygame.Rect(self.x, self.y, 3, 3)
         pygame.draw.rect(surface, white, rect, 0)
