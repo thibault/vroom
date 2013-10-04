@@ -1,5 +1,6 @@
-import pygame
+import datetime
 import math
+import pygame
 
 
 white = (255, 255, 255)
@@ -38,12 +39,20 @@ class Coordinates:
 
 class Universe:
     def __init__(self):
-        self.cars = (
-            Car(100.0, 100.0, math.pi / 2, 8.0),
+        self.cars = list()
+        self.nests = (
+            Nest(Coordinates(100, 100),
+                 Motion(math.pi / 2, 8.0),
+                 frequency=5000),
         )
 
     def update(self, delta):
         """Update the universe status."""
+        for nest in self.nests:
+            new_cars = nest.generate_car(self.cars)
+            if new_cars:
+                self.cars.append(new_cars)
+
         for car in self.cars:
             car.update(delta)
 
@@ -52,10 +61,41 @@ class Universe:
             car.draw(surface)
 
 
+class Nest:
+    """A nest is a car generator."""
+
+    birth_frequency = 5 * 500
+    max_cars = 5
+
+    def __init__(self, coord, motion, frequency):
+        assert isinstance(coord, Coordinates)
+        self.coord = coord
+
+        assert isinstance(motion, Motion)
+        self.motion = motion
+
+        self.frequency = frequency
+        self.last_car_generated_at = datetime.datetime.now()
+
+    def generate_car(self, cars):
+        """Add new cars on the map if necessary."""
+        now = datetime.datetime.now()
+        last_generation_delta = now - self.last_car_generated_at
+        milliseconds_delta = sum((last_generation_delta.seconds * 1000,
+                                 last_generation_delta.microseconds / 1000))
+
+        new_car = None
+        if milliseconds_delta > self.birth_frequency and len(cars) < self.max_cars:
+            new_car = Car(self.coord, self.motion)
+            self.last_car_generated_at = now
+
+        return new_car
+
+
 class Car:
-    def __init__(self, x, y, angle, speed):
-        self.coordinates = Coordinates(x, y)
-        self.motion = Motion(angle, speed)
+    def __init__(self, coord, motion):
+        self.coordinates = coord
+        self.motion = motion
         self.width = 3
 
     def update(self, delta):
