@@ -39,6 +39,12 @@ class Coordinates:
 
         return Coordinates(new_x, new_y)
 
+    def distance(self, coord):
+        y_dist = coord.y - self.y
+        x_dist = coord.x - self.x
+        dist = math.sqrt((y_dist ** 2) + (x_dist ** 2))
+        return dist
+
 
 class Universe:
     def __init__(self):
