@@ -13,8 +13,8 @@ class Node:
 
 class Arc:
     def __init__(self, src, dest):
-        assert isinstance(src, Coordinates)
-        assert isinstance(dest, Coordinates)
+        assert isinstance(src, Node)
+        assert isinstance(dest, Node)
 
         self.src = src
         self.dest = dest
@@ -26,6 +26,9 @@ class Road:
 
     def build(self, coords):
         assert len(coords) > 1
+
+        if not isinstance(coords, list):
+            coords = list(coords)
 
         src = Node(coords.pop())
         for coord in coords:
