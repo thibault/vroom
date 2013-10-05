@@ -20,8 +20,16 @@ clock.tick(30)
 
 # Initialize the universe
 universe = Universe(screen)
+universe.add_road((
+    (100, 100),
+    (150, 300),
+    (250, 500),
+    (400, 500),
+    (700, 200),
+))
 universe.add_nest(100, 100, math.pi / 2, 30.0)
 universe.add_hole(600, 100)
+
 
 while 1:
     for event in pygame.event.get():
