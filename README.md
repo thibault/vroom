@@ -23,3 +23,9 @@ Run it. It's easy.
     python main.py
 
 Beautiful, isn't it?
+
+
+## Coding
+
+ * The default distance unit is the meter
+ * The default time unit is the ms
