@@ -17,3 +17,13 @@ class RoadTests(unittest.TestCase):
         road.build(self.coords)
 
         self.assertEqual(len(road.arcs), 2)
+
+    def test_pointlist(self):
+        road = Road()
+        road.build(self.coords)
+
+        self.assertEqual(road.pointlist(), [
+            (100, 100),
+            (100, 300),
+            (500, 800),
+        ])
