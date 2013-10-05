@@ -14,7 +14,7 @@ clock = pygame.time.Clock()
 clock.tick(30)
 
 # Initialize the universe
-universe = Universe()
+universe = Universe(screen)
 universe.add_nest(100, 100, math.pi / 2, 30.0)
 universe.add_hole(600, 100)
 
@@ -25,7 +25,7 @@ while 1:
 
     screen.fill(black)
     universe.update(clock.get_time())
-    universe.draw(screen)
+    universe.draw()
 
     pygame.display.flip()
     clock.tick(30)

@@ -2,13 +2,15 @@ import datetime
 
 from physics import Motion, Coordinates
 from cars import Car
+from graphics import Graphic
 
 
 class Universe:
-    def __init__(self):
+    def __init__(self, surface):
         self.cars = list()
         self.nests = list()
         self.holes = list()
+        self.graphic = Graphic(surface)
 
     def add_nest(self, x, y, angle, speed, frequency=5000):
         self.nests.append(Nest(Coordinates(x, y),
@@ -31,9 +33,9 @@ class Universe:
         for car in self.cars:
             car.update(delta)
 
-    def draw(self, surface):
+    def draw(self):
         for car in self.cars:
-            car.draw(surface)
+            self.graphic.draw(car)
 
 
 class Nest:
