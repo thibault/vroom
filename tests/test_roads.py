@@ -1,6 +1,5 @@
 import unittest
 
-from physics import Coordinates
 from roads import Road
 
 
