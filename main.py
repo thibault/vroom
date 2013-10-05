@@ -5,9 +5,9 @@ PROJECT_ROOT = os.path.dirname(__file__)
 sys.path.insert(0, os.path.join(PROJECT_ROOT, 'vroom'))
 
 import pygame
-import math
 
 from world import Universe
+from roads import Road
 
 
 # Initialize pygame
@@ -20,16 +20,15 @@ clock.tick(30)
 
 # Initialize the universe
 universe = Universe(screen)
-universe.add_road((
+
+road_coords = (
     (100, 100),
     (150, 300),
     (250, 500),
     (400, 500),
-    (700, 200),
-))
-universe.add_nest(100, 100, math.pi / 2, 30.0)
-universe.add_hole(600, 100)
-
+    (700, 200))
+road = Road(road_coords)
+universe.add_road(road)
 
 while 1:
     for event in pygame.event.get():

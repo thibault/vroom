@@ -12,9 +12,12 @@ class Motion:
 
 class Coordinates:
     """Represents coordinates on the map."""
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
+    def __init__(self, x_and_y, y=None):
+        if isinstance(x_and_y, tuple):
+            self.x, self.y = x_and_y
+        else:
+            self.x = x_and_y
+            self.y = y
 
     def __repr__(self):
         return '<Coordinates(%s, %s)>' % (self.x, self.y)
