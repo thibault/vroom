@@ -82,15 +82,18 @@ class Arc:
 class Road:
     """A road is just a graph. That's it."""
 
-    def __init__(self, coords, max_cars=20, frequency=200):
+    def __init__(self, coords, max_cars=20, birth_frequency=500):
         self.nest = None
         self.hole = None
         self.cars = list()
         self.arcs = list()
+        self.max_cars = max_cars
+        self.birth_frequency = birth_frequency
+        self.last_car_generated_at = datetime.datetime(1970, 1, 1)
 
         assert len(coords) > 1
 
-        src = Nest(Coordinates(coords[0]), max_cars, frequency)
+        src = Nest(Coordinates(coords[0]), max_cars, birth_frequency)
         self.nest = src
         for coord in coords[1:-1]:
             dest = Node(Coordinates(coord))
@@ -100,9 +103,19 @@ class Road:
         self.hole = dest
         self.arcs.append(Arc(src, dest))
 
-        self.cars = (
-            Car(self.arcs[0], 30),
-        )
+    def generate_cars(self, nb_cars):
+        """Add new cars on the map if necessary."""
+        now = datetime.datetime.now()
+        last_generation_delta = now - self.last_car_generated_at
+        milliseconds_delta = sum((last_generation_delta.seconds * 1000,
+                                 last_generation_delta.microseconds / 1000))
+
+        new_car = None
+        if milliseconds_delta > self.birth_frequency and nb_cars < self.max_cars:
+            new_car = Car(self.arcs[0], 30)
+            self.last_car_generated_at = now
+
+        return new_car
 
     def pointlist(self):
         """Returns a list of tuples corresponding to the nodes coordinates."""
@@ -115,9 +128,9 @@ class Road:
 
     def update(self, delta):
         """Update the road status."""
-        #new_cars = self.nest.generate_cars(len(self.cars))
-        #if new_cars:
-        #    self.cars.append(new_cars)
+        new_cars = self.generate_cars(len(self.cars))
+        if new_cars:
+            self.cars.append(new_cars)
 
         self.cars = filter(self.hole.filter, self.cars)
 
