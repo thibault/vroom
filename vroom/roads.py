@@ -93,7 +93,7 @@ class Road:
 
         new_car = None
         if milliseconds_delta > self.birth_frequency and nb_cars < self.max_cars:
-            new_car = Car(self.arcs[0], 100)
+            new_car = Car(self.arcs[0], 8)
             self.last_car_generated_at = now
 
         return new_car
