@@ -1,12 +1,14 @@
 import datetime
 
 from physics import Motion, Coordinates
+from roads import Road
 from cars import Car
 from graphics import Graphic
 
 
 class Universe:
     def __init__(self, surface):
+        self.roads = list()
         self.cars = list()
         self.nests = list()
         self.holes = list()
@@ -19,6 +21,12 @@ class Universe:
 
     def add_hole(self, x, y):
         self.holes.append(Hole(Coordinates(x, y)))
+
+    def add_road(self, coords):
+        road = Road()
+        coords = [Coordinates(coord[0], coord[1]) for coord in coords]
+        road.build(coords)
+        self.roads.append(road)
 
     def update(self, delta):
         """Update the universe status."""
@@ -34,6 +42,9 @@ class Universe:
             car.update(delta)
 
     def draw(self):
+        for road in self.roads:
+            self.graphic.draw(road)
+
         for car in self.cars:
             self.graphic.draw(car)
 
