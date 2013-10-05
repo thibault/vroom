@@ -70,6 +70,14 @@ class Arc:
         return '<Arc (%s,%s)->(%s,%s)>' % (self.src.coord.x, self.src.coord.y,
                                            self.dest.coord.x, self.dest.coord.y)
 
+    @property
+    def angle(self):
+        """Get the angle of the current arc."""
+        x = self.dest.coord.x - self.src.coord.x
+        y = self.dest.coord.y - self.src.coord.y
+        angle = math.atan(y / x)
+        return angle
+
 
 class Road:
     """A road is just a graph. That's it."""
@@ -92,6 +100,10 @@ class Road:
         self.hole = dest
         self.arcs.append(Arc(src, dest))
 
+        self.cars = (
+            Car(self.arcs[0], 30),
+        )
+
     def pointlist(self):
         """Returns a list of tuples corresponding to the nodes coordinates."""
         points = list()
@@ -103,9 +115,9 @@ class Road:
 
     def update(self, delta):
         """Update the road status."""
-        new_cars = self.nest.generate_cars(len(self.cars))
-        if new_cars:
-            self.cars.append(new_cars)
+        #new_cars = self.nest.generate_cars(len(self.cars))
+        #if new_cars:
+        #    self.cars.append(new_cars)
 
         self.cars = filter(self.hole.filter, self.cars)
 
