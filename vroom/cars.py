@@ -5,12 +5,13 @@ from physics import Coordinates
 
 
 class Car:
-    def __init__(self, arc, speed):
+    def __init__(self, arc, speed, distance=0):
         self.arc = arc
-        self.distance = 0
+        self.distance = distance
         self.speed = speed
         self.desired_speed = random.randint(30, 60)
         self.acceleration = 6.67
+        self.desired_front_distance = random.randint(5, 15)
 
     def __repr__(self):
         return '<Car (%s, %s)>' % (self.coordinates.x, self.coordinates.y)
@@ -37,9 +38,20 @@ class Car:
 
         return Coordinates(x, y)
 
-    def update(self, delta):
+    def update(self, universe, delta):
+        """Integrate the new car position.
+
+        If there are cars in front of us, brake.
+        Otherwise, if we go too slow, accelerate.
+
+        """
         current_accel = 0.0
-        if self.speed < self.desired_speed:
+
+        front_car_distance = universe.next_car_distance(self)
+        if front_car_distance < self.desired_front_distance:
+            self.speed -= self.acceleration * 3 * delta / 1000.0
+            self.speed = max(self.speed, 0)
+        elif self.speed < self.desired_speed:
             self.speed += self.acceleration * delta / 1000.0
             current_accel = self.acceleration
 

@@ -40,6 +40,9 @@ class Arc:
         return '<Arc (%s,%s)->(%s,%s)>' % (self.src.coord.x, self.src.coord.y,
                                            self.dest.coord.x, self.dest.coord.y)
 
+    def __eq__(self, arc):
+        return self.index == arc.index
+
     @property
     def angle(self):
         """Get the angle of the current arc."""
@@ -61,7 +64,7 @@ class Arc:
 class Road:
     """A road is just a graph. That's it."""
 
-    def __init__(self, coords, max_cars=20, birth_frequency=500):
+    def __init__(self, coords, max_cars=20, birth_frequency=1500):
         self.hole = None
         self.cars = list()
         self.arcs = list()
@@ -93,10 +96,21 @@ class Road:
 
         new_car = None
         if milliseconds_delta > self.birth_frequency and nb_cars < self.max_cars:
-            new_car = Car(self.arcs[0], 8)
+            new_car = Car(self.arcs[0], 16)
             self.last_car_generated_at = now
 
         return new_car
+
+    def next_car_distance(self, car):
+        """Returns distance to the next car."""
+        next_car = Car(car.arc, 0, float('Inf'))
+        for other_car in self.cars:
+            if all((car.arc == other_car.arc,
+                    car.distance < other_car.distance,
+                    other_car.distance < next_car.distance)):
+                next_car = other_car
+
+        return next_car.coordinates.distance(car.coordinates)
 
     def pointlist(self):
         """Returns a list of tuples corresponding to the nodes coordinates."""
@@ -116,7 +130,7 @@ class Road:
         self.cars = filter(self.hole.filter, self.cars)
 
         for car in self.cars:
-            car.update(delta)
+            car.update(self, delta)
             if car.distance >= car.arc.length:
                 arc = self.arcs[car.arc.index + 1]
                 car.set_arc(arc)
