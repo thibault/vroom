@@ -22,7 +22,9 @@ class Arc:
 
 class Road:
     """A road is just a graph. That's it."""
-    arcs = list()
+
+    def __init__(self):
+        self.arcs = list()
 
     def build(self, coords):
         assert len(coords) > 1
