@@ -22,11 +22,11 @@ clock.tick(30)
 universe = Universe(screen)
 
 road_coords = (
-    (100, 100),
-    (150, 300),
-    (250, 500),
-    (400, 500),
-    (700, 200))
+    (400, 150),
+    (200, 300),
+    (400, 450),
+    (600, 300),
+    (400, 200))
 road = Road(road_coords)
 universe.add_road(road)
 
