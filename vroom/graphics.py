@@ -23,9 +23,18 @@ class Graphic:
 
     def draw_car(self, car):
         coord = car.coordinates
+        acceleration_rate = car.acceleration_rate
         rect = pygame.Rect(coord.x, coord.y,
                            self.car_width, self.car_width)
-        pygame.draw.rect(self.surface, self.car_color, rect, 0)
+
+        # Change car color depending on acceleration
+        if acceleration_rate > 0:
+            rate = min(1, acceleration_rate)
+            color = (50, 50, int(rate * 255))
+        else:
+            rate = max(-1, acceleration_rate)
+            color = (int(-rate * 255), 50, 50)
+        pygame.draw.rect(self.surface, color, rect, 0)
 
     def draw_road(self, road):
         pointlist = road.pointlist()
