@@ -4,7 +4,7 @@ import pygame
 class Graphic:
     car_color = (255, 50, 50)
     car_width = 3
-    road_color = (50, 255, 50)
+    road_color = (255, 255, 255)
     road_width = 6
     draw_methods = {
         'Car': 'draw_car',
