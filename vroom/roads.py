@@ -35,6 +35,7 @@ class Arc:
         self.src = src
         self.dest = dest
         self.index = index
+        self.next = next
 
     def __repr__(self):
         return '<Arc (%s,%s)->(%s,%s)>' % (self.src.coord.x, self.src.coord.y,
@@ -74,18 +75,23 @@ class Road:
 
         assert len(coords) > 1
 
-        src = None
-        arc_index = 0
-        for coord in coords[0:-1]:
+        src = Node(Coordinates(coords[0]))
+        previous_arc = None
+        index = 0
+        for coord in coords[1:-1]:
             dest = Node(Coordinates(coord))
-            if src:
-                self.arcs.append(Arc(src, dest, arc_index))
-                arc_index += 1
+            arc = Arc(src, dest, index)
+            self.arcs.append(arc)
+            if previous_arc:
+                previous_arc.next = arc
+            previous_arc = arc
+            index += 1
             src = dest
-
         dest = Hole(Coordinates(coords[-1]))
         self.hole = dest
-        self.arcs.append(Arc(src, dest, arc_index))
+        arc = Arc(src, dest, index)
+        self.arcs.append(arc)
+        previous_arc.next = arc
 
     def generate_cars(self, nb_cars):
         """Add new cars on the map if necessary."""
@@ -108,6 +114,7 @@ class Road:
 
         """
         next_car = Car(car.arc, 0, float('Inf'))
+
         for other_car in self.cars:
             if all((car.arc == other_car.arc,
                     car.distance < other_car.distance,
