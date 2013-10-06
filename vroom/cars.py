@@ -13,10 +13,10 @@ class IDM:
     accel_exponent = 4
 
     def __init__(self):
-        self.desired_velocity = random.randint(30, 36)  # 110 ~ 130 km/h
+        self.desired_velocity = random.uniform(25, 36)  # 90 ~ 130 km/h
         self.minimum_gap = 2
         self.safe_time_headway = random.uniform(0.8, 2)
-        self.maximum_acceleration = random.uniform(1, 2)
+        self.maximum_acceleration = random.uniform(1, 3)
         self.desired_deceleration = random.uniform(2, 3)
 
     def step(self, time_delta,
@@ -24,9 +24,16 @@ class IDM:
              leading_car_distance,
              approaching_rate):
 
+        new_speed = speed + acceleration * time_delta / 1000.0
+
+        accel_component = (speed / self.desired_velocity) ** self.accel_exponent
+        # TODO : make this look less ugly
+        decel_component = ((self.minimum_gap + speed * self.safe_time_headway + (speed * approaching_rate / (2 * math.sqrt(self.maximum_acceleration * self.desired_deceleration)))) / leading_car_distance) ** 2
+        accel = self.maximum_acceleration * (1 - accel_component - decel_component)
+
         return {
-            'speed': speed,
-            'acceleration': acceleration,
+            'speed': new_speed,
+            'acceleration': accel,
         }
 
 
@@ -63,6 +70,16 @@ class Car:
         y = coord.y + dy
 
         return Coordinates(x, y)
+
+    @property
+    def acceleration_rate(self):
+        """Returns rate between current acceleration and max acceleration."""
+        if self.acceleration >= 0:
+            rate = self.acceleration / self.driver_model.maximum_acceleration
+        else:
+            rate = self.acceleration / self.driver_model.desired_deceleration
+
+        return rate
 
     def update(self, universe, delta):
         """Integrate the new car position."""
