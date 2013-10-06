@@ -33,11 +33,6 @@ Beautiful, isn't it?
 
 ## TODO
 
- * Cars' desired distance should depend on it's speed
- * Cars' deceleration should depend on front vehicle distance and speed delta
  * Cars' should decelerate according to turning angle
- * Cars' should never accelerate enough to cause accident
- * Every car should have a specific acceleration / decelaration limit
- * Every drive should apply differente accelerations
  * Drivers' variations should be coherent (someone driving very fast is likely
    to let less distance before front vehicles)
