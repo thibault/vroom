@@ -14,7 +14,7 @@ class IDM:
 
     def __init__(self):
         self.desired_velocity = random.uniform(25, 36)  # 90 ~ 130 km/h
-        self.minimum_gap = 2
+        self.minimum_gap = random.uniform(1.5, 3)
         self.safe_time_headway = random.uniform(0.8, 2)
         self.maximum_acceleration = random.uniform(1, 3)
         self.desired_deceleration = random.uniform(2, 3)
