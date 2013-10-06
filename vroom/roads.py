@@ -101,8 +101,12 @@ class Road:
 
         return new_car
 
-    def next_car_distance(self, car):
-        """Returns distance to the next car."""
+    def leading_car(self, car):
+        """Returns the next car.
+
+        TODO: don't limit ourselves to the current arc.
+
+        """
         next_car = Car(car.arc, 0, float('Inf'))
         for other_car in self.cars:
             if all((car.arc == other_car.arc,
@@ -110,7 +114,7 @@ class Road:
                     other_car.distance < next_car.distance)):
                 next_car = other_car
 
-        return next_car.coordinates.distance(car.coordinates)
+        return next_car
 
     def pointlist(self):
         """Returns a list of tuples corresponding to the nodes coordinates."""

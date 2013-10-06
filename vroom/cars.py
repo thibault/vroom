@@ -4,14 +4,40 @@ import random
 from physics import Coordinates
 
 
+class IDM:
+    """Intelligent Driver Model implementation.
+
+    See http://en.wikipedia.org/wiki/Intelligent_Driver_Model
+
+    """
+    accel_exponent = 4
+
+    def __init__(self):
+        self.desired_velocity = random.randint(30, 36)  # 110 ~ 130 km/h
+        self.minimum_gap = 2
+        self.safe_time_headway = random.uniform(0.8, 2)
+        self.maximum_acceleration = random.uniform(1, 2)
+        self.desired_deceleration = random.uniform(2, 3)
+
+    def step(self, time_delta,
+             speed, acceleration,
+             leading_car_distance,
+             approaching_rate):
+
+        return {
+            'speed': speed,
+            'acceleration': acceleration,
+        }
+
+
 class Car:
     def __init__(self, arc, speed, distance=0):
         self.arc = arc
         self.distance = distance
         self.speed = speed
-        self.desired_speed = random.randint(30, 60)
-        self.acceleration = 6.67
-        self.desired_front_distance = random.randint(5, 15)
+        self.acceleration = 0
+
+        self.driver_model = IDM()
 
     def __repr__(self):
         return '<Car (%s, %s)>' % (self.coordinates.x, self.coordinates.y)
@@ -39,21 +65,15 @@ class Car:
         return Coordinates(x, y)
 
     def update(self, universe, delta):
-        """Integrate the new car position.
+        """Integrate the new car position."""
+        leading_car = universe.leading_car(self)
+        leading_distance = leading_car.coordinates.distance(self.coordinates)
+        approaching_rate = self.speed - leading_car.speed
 
-        If there are cars in front of us, brake.
-        Otherwise, if we go too slow, accelerate.
-
-        """
-        current_accel = 0.0
-
-        front_car_distance = universe.next_car_distance(self)
-        if front_car_distance < self.desired_front_distance:
-            self.speed -= self.acceleration * 3 * delta / 1000.0
-            self.speed = max(self.speed, 0)
-        elif self.speed < self.desired_speed:
-            self.speed += self.acceleration * delta / 1000.0
-            current_accel = self.acceleration
+        step = self.driver_model.step(delta, self.speed, self.acceleration,
+                                      leading_distance, approaching_rate)
+        self.speed = step['speed']
+        self.acceleration = step['acceleration']
 
         # http://fr.wikipedia.org/wiki/Acc%C3%A9l%C3%A9ration#Calcul_de_la_distance_parcourue
-        self.distance += (current_accel * delta * delta / 2000000.0) + self.speed * delta / 1000.0
+        self.distance += (self.acceleration * delta * delta / 2000000.0) + self.speed * delta / 1000.0
