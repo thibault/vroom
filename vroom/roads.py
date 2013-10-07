@@ -64,7 +64,7 @@ class Arc:
 class Road:
     """A road is just a graph. That's it."""
 
-    def __init__(self, coords, max_cars=20, birth_frequency=1500):
+    def __init__(self, coords, max_cars=20, birth_frequency=5000):
         self.hole = None
         self.cars = list()
         self.arcs = list()
