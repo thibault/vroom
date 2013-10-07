@@ -7,6 +7,9 @@ from cars import Car
 
 class Node(object):
     """This is a node in a road."""
+
+    radius = 20
+
     def __init__(self, coord):
         assert isinstance(coord, Coordinates)
 
@@ -14,14 +17,6 @@ class Node(object):
 
     def __repr__(self):
         return '<Node %s>' % self.coord
-
-
-class Hole(Node):
-    """A special node that deletes cars that crosses it."""
-    radius = 20
-
-    def __repr__(self):
-        return '<Hole %s>' % self.coord
 
     def filter(self, car):
         return car.coordinates.distance(self.coord) > self.radius
@@ -76,16 +71,14 @@ class Road:
 
         src = None
         arc_index = 0
-        for coord in coords[0:-1]:
+        for coord in coords:
             dest = Node(Coordinates(coord))
             if src:
                 self.arcs.append(Arc(src, dest, arc_index))
                 arc_index += 1
             src = dest
 
-        dest = Hole(Coordinates(coords[-1]))
-        self.hole = dest
-        self.arcs.append(Arc(src, dest, arc_index))
+        self.hole = src
 
     def generate_cars(self, nb_cars):
         """Add new cars on the map if necessary."""
