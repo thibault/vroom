@@ -29,11 +29,9 @@ class Graphic:
 
         # Change car color depending on acceleration
         if acceleration_rate > 0:
-            rate = min(1, acceleration_rate)
-            color = (0, 0, int(rate * 255))
+            color = (0, 0, 255)
         else:
-            rate = max(-1, acceleration_rate)
-            color = (int(-rate * 255), 0, 0)
+            color = (255, 0, 0)
         pygame.draw.rect(self.surface, color, rect, 0)
 
     def draw_road(self, road):
