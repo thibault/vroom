@@ -42,7 +42,8 @@ class Car:
         self.arc = arc
         self.distance = distance
         self.speed = speed
-        self.acceleration = 0
+        self.acceleration = 0.0
+        self.total_distance = 0.0
 
         self.driver_model = IDM()
 
@@ -93,4 +94,6 @@ class Car:
         self.acceleration = step['acceleration']
 
         # http://fr.wikipedia.org/wiki/Acc%C3%A9l%C3%A9ration#Calcul_de_la_distance_parcourue
-        self.distance += (self.acceleration * delta * delta / 2000000.0) + self.speed * delta / 1000.0
+        distance = (self.acceleration * delta * delta / 2000000.0) + self.speed * delta / 1000.0
+        self.distance += distance
+        self.total_distance += distance

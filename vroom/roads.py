@@ -101,10 +101,10 @@ class Road:
 
         """
         next_car = Car(car.arc, 0, float('Inf'))
+        next_car.total_distance = float('Inf')
         for other_car in self.cars:
-            if all((car.arc == other_car.arc,
-                    car.distance < other_car.distance,
-                    other_car.distance < next_car.distance)):
+            if all((other_car.total_distance > car.total_distance,
+                    other_car.total_distance < next_car.total_distance)):
                 next_car = other_car
 
         return next_car
